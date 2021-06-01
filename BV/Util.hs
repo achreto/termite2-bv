@@ -1,4 +1,4 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, DataKinds #-}
 
 module BV.Util(mod2,
                zero,
@@ -27,7 +27,7 @@ import Data.Bits
 import Data.List
 import Data.Maybe
 import Data.Tuple.HT
-import Math.NumberTheory.Moduli
+import GHC.Integer.GMP.Internals
 
 import Util hiding (trace)
 import BV.Types
@@ -50,7 +50,7 @@ constMul :: Integer -> Const -> Int -> Const
 constMul c cn w = mkConst (c * (cVal cn)) w
 
 constInvert :: Integer -> Int -> Maybe Integer
-constInvert i w = invertMod i (1 `shiftL` w)
+constInvert i w = Just $ recipModInteger i (1 `shiftL` w)
 
 constNeg :: Const -> Const
 constNeg (Const c w) = mkConst ((complement c) `mod2` w) w
